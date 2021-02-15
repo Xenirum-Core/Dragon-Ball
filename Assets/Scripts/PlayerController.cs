@@ -5,36 +5,66 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public float Speed = 2f;
+    public GameObject Projectile;
+    public GameObject UltimateProjectile;
+    public GameObject SpawnPosition;
 
-    private SpriteRenderer m_SpriteRenderer;
-    private Rigidbody2D m_RigidBody2D;
+    SpriteRenderer m_SpriteRenderer;
+    Rigidbody2D m_RigidBody2D;
+    Animator m_Animator;
+    bool m_FacingRight = true;
 
     private float m_HorizontalAxis;
     private float m_VerticalAxis;
+
+    Vector2 movementVector;
+
+    void Flip()
+    {
+        m_FacingRight = !m_FacingRight;
+
+        transform.Rotate(0f, 180f, 0f);
+    }
 
     void Start()
     {
         m_SpriteRenderer = GetComponent<SpriteRenderer>();
         m_RigidBody2D = GetComponent<Rigidbody2D>();
+        m_Animator = GetComponent<Animator>();
     }
 
     void Update()
     {
         m_HorizontalAxis = Input.GetAxisRaw("Horizontal");
         m_VerticalAxis = Input.GetAxisRaw("Vertical");
+
+        if (movementVector.x == 0 && movementVector.y == 0)
+        {
+            m_Animator.Play("Idle");
+        }
+
+        if (movementVector.x != 0 || movementVector.y != 0)
+        {
+            m_Animator.Play("Walk");
+        }
+
+        if (m_HorizontalAxis > 0 && !m_FacingRight) Flip();
+        if (m_HorizontalAxis < 0 && m_FacingRight) Flip();
+        
+        if (Input.GetButtonDown("Fire"))
+        {
+            Instantiate(Projectile, SpawnPosition.transform.position, transform.rotation);
+        }
+
+        if (Input.GetButtonDown("Ultimate"))
+        {
+            Instantiate(UltimateProjectile, SpawnPosition.transform.position, transform.rotation);
+        }
     }
 
     void FixedUpdate()
     {
-        if (m_RigidBody2D.velocity.x < 0)
-        {
-            m_SpriteRenderer.flipX = true;
-        }
-        else if (m_RigidBody2D.velocity.x > 0)
-        {
-            m_SpriteRenderer.flipX = false;
-        }
-
-        m_RigidBody2D.velocity = new Vector2(m_HorizontalAxis * Speed, m_VerticalAxis * Speed);
+        movementVector = new Vector2(m_HorizontalAxis, m_VerticalAxis) * Speed * Time.fixedDeltaTime;
+        m_RigidBody2D.velocity = movementVector;
     }
 }
