@@ -12,11 +12,11 @@ GameObject:
   - component: {fileID: 4130254336385021703}
   - component: {fileID: 294257896}
   - component: {fileID: 7985480556027747319}
-  - component: {fileID: 2049517843366404967}
   - component: {fileID: 578232122942550519}
+  - component: {fileID: 4605491469673461071}
   m_Layer: 0
   m_Name: Fireball
-  m_TagString: Untagged
+  m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -122,23 +122,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &2049517843366404967
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2866507766981829344}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a429e591f52848048b9174918299ec9b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Damage: 20
-  BodySpeed: 20
-  ImpactEffect: {fileID: 0}
-  ShootClip: {fileID: 8300000, guid: bb8c1e8fc4c5f194da1b308cbe799812, type: 3}
-  ImpactClip: {fileID: 8300000, guid: daf163802004b104c9d21b4d73dddf68, type: 3}
 --- !u!82 &578232122942550519
 AudioSource:
   m_ObjectHideFlags: 0
@@ -235,3 +218,20 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &4605491469673461071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2866507766981829344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de2f0ce59e2347949b616cfe77795c4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Damage: 20
+  BodySpeed: 20
+  ImpactEffect: {fileID: 0}
+  ShootClip: {fileID: 8300000, guid: bb8c1e8fc4c5f194da1b308cbe799812, type: 3}
+  ImpactClip: {fileID: 8300000, guid: daf163802004b104c9d21b4d73dddf68, type: 3}

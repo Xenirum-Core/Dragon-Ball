@@ -5,8 +5,8 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public float Speed = 2f;
-    public GameObject Projectile;
-    public GameObject UltimateProjectile;
+    public GameObject PrimaryAttack;
+    public GameObject UltimateAttack;
     public GameObject SpawnPosition;
 
     SpriteRenderer m_SpriteRenderer;
@@ -22,8 +22,12 @@ public class PlayerController : MonoBehaviour
     void Flip()
     {
         m_FacingRight = !m_FacingRight;
-
         transform.Rotate(0f, 180f, 0f);
+    }
+
+    void SpawnBullet(GameObject bulletPrefab)
+    {
+        Instantiate(bulletPrefab, SpawnPosition.transform.position, transform.rotation);
     }
 
     void Start()
@@ -53,12 +57,12 @@ public class PlayerController : MonoBehaviour
         
         if (Input.GetButtonDown("Fire"))
         {
-            Instantiate(Projectile, SpawnPosition.transform.position, transform.rotation);
+            SpawnBullet(PrimaryAttack);
         }
 
         if (Input.GetButtonDown("Ultimate"))
         {
-            Instantiate(UltimateProjectile, SpawnPosition.transform.position, transform.rotation);
+            SpawnBullet(UltimateAttack);
         }
     }
 

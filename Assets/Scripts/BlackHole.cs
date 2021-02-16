@@ -6,6 +6,9 @@ public class BlackHole : MonoBehaviour
 {
     void OnCollisionEnter2D(Collision2D col)
     {
-        transform.localScale += new Vector3(0.1f, 0.1f, 0f);
+        if(col.collider.tag == "Bullet")
+        {
+            transform.localScale += new Vector3(0.1f, 0.1f, 0f);
+        }
     }
 }

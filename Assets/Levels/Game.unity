@@ -451,9 +451,21 @@ PrefabInstance:
         type: 3}
     - target: {fileID: 7653246735321308094, guid: c833d95ca30945949ba3ae65c44612f4,
         type: 3}
+      propertyPath: PrimaryAttack
+      value: 
+      objectReference: {fileID: 2866507766981829344, guid: b052e3a2d93a40140ad92d2628366c72,
+        type: 3}
+    - target: {fileID: 7653246735321308094, guid: c833d95ca30945949ba3ae65c44612f4,
+        type: 3}
       propertyPath: SpawnPosition
       value: 
       objectReference: {fileID: 260797783}
+    - target: {fileID: 7653246735321308094, guid: c833d95ca30945949ba3ae65c44612f4,
+        type: 3}
+      propertyPath: UltimateAttack
+      value: 
+      objectReference: {fileID: 2722144596672012485, guid: 056e387893776f742a908c8b3077d6da,
+        type: 3}
     - target: {fileID: 7653246735321308094, guid: c833d95ca30945949ba3ae65c44612f4,
         type: 3}
       propertyPath: PhysicController
