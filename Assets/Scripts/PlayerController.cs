@@ -6,13 +6,15 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public float Health = 100f;
-    public float Speed = 2f;
+    public Camera PlayerCamera;
+    public GameObject PlayerSkin;
     public GameObject SpawnPosition;
     public GameObject PrimaryAttack;
     public GameObject UltimateAttack;
+    
+    public float PlayerHealth = 100f;
+    public float PlayerSpeed = 80f;
 
-    SpriteRenderer m_SpriteRenderer;
     Rigidbody2D m_RigidBody2D;
     Animator m_Animator;
     bool m_FacingRight = true;
@@ -20,34 +22,33 @@ public class PlayerController : MonoBehaviour
     private float m_HorizontalAxis;
     private float m_VerticalAxis;
 
-    Vector2 movementVector;
+    Vector2 MovementVector;
 
     void Die()
     {
-        gameObject.SetActive(false);
+        PlayerSkin.SetActive(false);
     }
 
     void Flip()
     {
         m_FacingRight = !m_FacingRight;
-        transform.Rotate(0f, 180f, 0f);
+        PlayerSkin.transform.Rotate(0f, 180f, 0f);
     }
 
-    void SpawnBullet(GameObject bulletPrefab)
+    void SpawnBullet(GameObject BulletPrefab)
     {
-        Instantiate(bulletPrefab, SpawnPosition.transform.position, transform.rotation);
+        Instantiate(BulletPrefab, SpawnPosition.transform.position, SpawnPosition.transform.rotation);
     }
 
     public void PlayerDamage(float damageValue)
     {
-        Health -= damageValue;
+        PlayerHealth -= damageValue;
     }
 
     void Start()
     {
-        m_SpriteRenderer = GetComponent<SpriteRenderer>();
-        m_RigidBody2D = GetComponent<Rigidbody2D>();
-        m_Animator = GetComponent<Animator>();
+        m_RigidBody2D = PlayerSkin.GetComponent<Rigidbody2D>();
+        m_Animator = PlayerSkin.GetComponent<Animator>();
     }
 
     void Update()
@@ -55,12 +56,12 @@ public class PlayerController : MonoBehaviour
         m_HorizontalAxis = Input.GetAxisRaw("Horizontal");
         m_VerticalAxis = Input.GetAxisRaw("Vertical");
 
-        if (movementVector.x == 0 && movementVector.y == 0)
+       if (MovementVector.x == 0 && MovementVector.y == 0)
         {
             m_Animator.Play("Idle");
         }
 
-        if (movementVector.x != 0 || movementVector.y != 0)
+        if (MovementVector.x != 0 || MovementVector.y != 0)
         {
             m_Animator.Play("Walk");
         }
@@ -78,7 +79,7 @@ public class PlayerController : MonoBehaviour
             SpawnBullet(UltimateAttack);
         }
 
-        if (Health <= 0f)
+        if (PlayerHealth <= 0f)
         {
             Die();
         }
@@ -86,7 +87,7 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        movementVector = new Vector2(m_HorizontalAxis, m_VerticalAxis) * Speed * Time.fixedDeltaTime;
-        m_RigidBody2D.velocity = movementVector;
+        MovementVector = new Vector2(m_HorizontalAxis, m_VerticalAxis) * PlayerSpeed * Time.fixedDeltaTime;
+        m_RigidBody2D.velocity = MovementVector;
     }
 }
