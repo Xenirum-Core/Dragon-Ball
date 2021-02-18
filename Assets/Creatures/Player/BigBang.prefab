@@ -95,7 +95,7 @@ CapsuleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -121,7 +121,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!114 &6545794056762951541
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -135,10 +135,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Damage: 80
-  BodySpeed: 10
-  ImpactEffect: {fileID: 0}
+  Speed: 10
+  ImpactEffect: {fileID: 8580584751530012756, guid: 57d3543c94292344c9f71fbeebc4ddd6,
+    type: 3}
   ShootClip: {fileID: 8300000, guid: bb8c1e8fc4c5f194da1b308cbe799812, type: 3}
-  ImpactClip: {fileID: 8300000, guid: daf163802004b104c9d21b4d73dddf68, type: 3}
+  ImpactClip: {fileID: 8300000, guid: 00e932494db9fb44b86545aa20e91396, type: 3}
 --- !u!82 &1513100175709466959
 AudioSource:
   m_ObjectHideFlags: 0

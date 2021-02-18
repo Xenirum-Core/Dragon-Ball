@@ -1,13 +1,16 @@
-﻿using System.Collections;
+﻿// TODO: Implement die animation
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public float Health = 100f;
     public float Speed = 2f;
+    public GameObject SpawnPosition;
     public GameObject PrimaryAttack;
     public GameObject UltimateAttack;
-    public GameObject SpawnPosition;
 
     SpriteRenderer m_SpriteRenderer;
     Rigidbody2D m_RigidBody2D;
@@ -19,6 +22,11 @@ public class PlayerController : MonoBehaviour
 
     Vector2 movementVector;
 
+    void Die()
+    {
+        gameObject.SetActive(false);
+    }
+
     void Flip()
     {
         m_FacingRight = !m_FacingRight;
@@ -28,6 +36,11 @@ public class PlayerController : MonoBehaviour
     void SpawnBullet(GameObject bulletPrefab)
     {
         Instantiate(bulletPrefab, SpawnPosition.transform.position, transform.rotation);
+    }
+
+    public void PlayerDamage(float damageValue)
+    {
+        Health -= damageValue;
     }
 
     void Start()
@@ -63,6 +76,11 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButtonDown("Ultimate"))
         {
             SpawnBullet(UltimateAttack);
+        }
+
+        if (Health <= 0f)
+        {
+            Die();
         }
     }
 
