@@ -65,7 +65,7 @@ public class PlayerController : MonoBehaviour
             Time.timeScale = 0;
         }
 
-        // Getting values from Input Manager
+        // Get values from Input Manager
         m_HorizontalAxis = Input.GetAxisRaw("Horizontal");
         m_VerticalAxis = Input.GetAxisRaw("Vertical");
 

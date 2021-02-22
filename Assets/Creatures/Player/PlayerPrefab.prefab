@@ -34,7 +34,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 180.3, y: 60}
+  m_AnchoredPosition: {x: 180.29999, y: 60}
   m_SizeDelta: {x: 250, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8108283717063208148
@@ -1212,8 +1212,9 @@ MonoBehaviour:
   UltimateAttack: {fileID: 2722144596672012485, guid: 056e387893776f742a908c8b3077d6da,
     type: 3}
   Health: 100
-  Speed: 80
+  Speed: 160
   FollowCameraSmooth: 2
+  RagePoints: 0
 --- !u!1 &7443625861059965173
 GameObject:
   m_ObjectHideFlags: 0
