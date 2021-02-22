@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 4605491469673461071}
   m_Layer: 0
   m_Name: Fireball
-  m_TagString: Untagged
+  m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -132,11 +132,11 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: bb8c1e8fc4c5f194da1b308cbe799812, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 1
+  Loop: 0
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -232,7 +232,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Damage: 20
   Speed: 20
-  ImpactEffect: {fileID: 8580584751530012756, guid: 57d3543c94292344c9f71fbeebc4ddd6,
+  ImpactPrefab: {fileID: 8580584751530012756, guid: 57d3543c94292344c9f71fbeebc4ddd6,
     type: 3}
-  ShootClip: {fileID: 8300000, guid: bb8c1e8fc4c5f194da1b308cbe799812, type: 3}
   ImpactClip: {fileID: 8300000, guid: daf163802004b104c9d21b4d73dddf68, type: 3}

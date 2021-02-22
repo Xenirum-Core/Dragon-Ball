@@ -13,10 +13,10 @@ GameObject:
   - component: {fileID: 137314066660597222}
   - component: {fileID: 1541303366177371482}
   - component: {fileID: 1513100175709466959}
-  - component: {fileID: 6545794056762951541}
+  - component: {fileID: 7612791478977749603}
   m_Layer: 0
   m_Name: BigBang
-  m_TagString: Untagged
+  m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -132,7 +132,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: bb8c1e8fc4c5f194da1b308cbe799812, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -218,7 +218,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &6545794056762951541
+--- !u!114 &7612791478977749603
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -231,8 +231,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Damage: 40
-  Speed: 20
-  ImpactEffect: {fileID: 8580584751530012756, guid: 57d3543c94292344c9f71fbeebc4ddd6,
+  Speed: 10
+  ImpactPrefab: {fileID: 8580584751530012756, guid: 57d3543c94292344c9f71fbeebc4ddd6,
     type: 3}
-  ShootClip: {fileID: 8300000, guid: bb8c1e8fc4c5f194da1b308cbe799812, type: 3}
   ImpactClip: {fileID: 8300000, guid: 00e932494db9fb44b86545aa20e91396, type: 3}

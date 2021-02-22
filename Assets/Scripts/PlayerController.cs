@@ -1,6 +1,4 @@
-﻿// TODO: Implement die animation
-
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,66 +6,79 @@ public class PlayerController : MonoBehaviour
 {
     public Camera PlayerCamera;
     public GameObject PlayerSkin;
-    public GameObject SpawnPosition;
+    public GameObject ProjectileSpawnPoint;
     public GameObject PrimaryAttack;
     public GameObject UltimateAttack;
     
-    public float PlayerHealth = 100f;
-    public float PlayerSpeed = 80f;
+    public float Health = 100f;
+    public float Speed = 80f;
+    public float FollowCameraSmooth = 2f;
+    public int RagePoints = 0;
 
-    Rigidbody2D m_RigidBody2D;
-    Animator m_Animator;
-    bool m_FacingRight = true;
-
+    private Rigidbody2D m_Rigidbody2D;
+    private Animator m_Animator;
+    
+    private bool m_FacingRight = true;
     private float m_HorizontalAxis;
     private float m_VerticalAxis;
 
-    Vector2 MovementVector;
+    private Vector2 m_MovementVector;
 
-    void Die()
+    // Spawn projectile owned by player
+    void SpawnBullet(GameObject ProjectilePrefab)
     {
-        PlayerSkin.SetActive(false);
+        m_Animator.Play("player_attack");
+        Instantiate(ProjectilePrefab, ProjectileSpawnPoint.transform.position, ProjectileSpawnPoint.transform.rotation);
     }
 
-    void Flip()
+    void UltimateAbuse()
     {
-        m_FacingRight = !m_FacingRight;
-        PlayerSkin.transform.Rotate(0f, 180f, 0f);
+        if (RagePoints >= 10)
+        {
+            SpawnBullet(UltimateAttack);
+            RagePoints -= 10;
+        }
     }
 
-    void SpawnBullet(GameObject BulletPrefab)
+    public void SetDamage(int value)
     {
-        Instantiate(BulletPrefab, SpawnPosition.transform.position, SpawnPosition.transform.rotation);
-    }
-
-    public void PlayerDamage(float damageValue)
-    {
-        PlayerHealth -= damageValue;
+        if (Health <= 0)
+        {
+            Health = 0f;
+        }
+        else
+        {
+            Health -= value;
+        }
     }
 
     void Start()
     {
-        m_RigidBody2D = PlayerSkin.GetComponent<Rigidbody2D>();
+        m_Rigidbody2D = PlayerSkin.GetComponent<Rigidbody2D>();
         m_Animator = PlayerSkin.GetComponent<Animator>();
     }
 
     void Update()
     {
+        if (Health <= 0f)
+        {
+            Time.timeScale = 0;
+        }
+
+        // Getting values from Input Manager
         m_HorizontalAxis = Input.GetAxisRaw("Horizontal");
         m_VerticalAxis = Input.GetAxisRaw("Vertical");
 
-       if (MovementVector.x == 0 && MovementVector.y == 0)
-        {
-            m_Animator.Play("Idle");
-        }
+        // Player play animation
+        if (m_MovementVector.x != 0) m_Animator.SetFloat("MovementSpeed", Mathf.Abs(m_HorizontalAxis));
+        if (m_MovementVector.y != 0) m_Animator.SetFloat("MovementSpeed", Mathf.Abs(m_VerticalAxis));
 
-        if (MovementVector.x != 0 || MovementVector.y != 0)
+        // Player skin direction by X-axis
+        if ((m_HorizontalAxis > 0 && !m_FacingRight) || (m_HorizontalAxis < 0 && m_FacingRight))
         {
-            m_Animator.Play("Walk");
+            m_FacingRight = !m_FacingRight;
+            PlayerSkin.transform.Rotate(0f, 180f, 0f);
         }
-
-        if (m_HorizontalAxis > 0 && !m_FacingRight) Flip();
-        if (m_HorizontalAxis < 0 && m_FacingRight) Flip();
         
         if (Input.GetButtonDown("Fire"))
         {
@@ -76,18 +87,17 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetButtonDown("Ultimate"))
         {
-            SpawnBullet(UltimateAttack);
-        }
-
-        if (PlayerHealth <= 0f)
-        {
-            Die();
+            UltimateAbuse();
         }
     }
 
     void FixedUpdate()
     {
-        MovementVector = new Vector2(m_HorizontalAxis, m_VerticalAxis) * PlayerSpeed * Time.fixedDeltaTime;
-        m_RigidBody2D.velocity = MovementVector;
+        // Camera follow player
+        PlayerCamera.transform.position = Vector2.Lerp(PlayerCamera.transform.position, PlayerSkin.transform.position, FollowCameraSmooth);
+
+        // Player movement
+        m_MovementVector = new Vector2(m_HorizontalAxis, m_VerticalAxis) * Speed * Time.fixedDeltaTime;
+        m_Rigidbody2D.velocity = m_MovementVector;
     }
 }
