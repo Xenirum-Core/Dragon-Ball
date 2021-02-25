@@ -41,11 +41,11 @@ public class ProjectileController : MonoBehaviour
         m_Collider2D.enabled = false;
         m_SpriteRenderer.enabled = false;
 
-        m_AudioSource.Stop();
+        //m_AudioSource.Stop();
         m_ImpactEffectInst = Instantiate(ImpactPrefab, transform.position, transform.rotation);
         m_AudioSource.PlayOneShot(ImpactClip);
 
         Destroy(gameObject, 4f);
-        Destroy(m_ImpactEffectInst, 0.5f);
+        Destroy(m_ImpactEffectInst, m_ImpactEffectInst.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length);
     }
 }

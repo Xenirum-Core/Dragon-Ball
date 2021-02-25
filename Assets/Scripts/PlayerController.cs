@@ -31,6 +31,11 @@ public class PlayerController : MonoBehaviour
         Instantiate(ProjectilePrefab, ProjectileSpawnPoint.transform.position, ProjectileSpawnPoint.transform.rotation);
     }
 
+    public void AddRage()
+    {
+        RagePoints++;
+    }
+
     void UltimateAbuse()
     {
         if (RagePoints >= 10)
@@ -48,6 +53,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
+            m_Animator.Play("player_hurt");
             Health -= value;
         }
     }
@@ -79,7 +85,7 @@ public class PlayerController : MonoBehaviour
             m_FacingRight = !m_FacingRight;
             PlayerSkin.transform.Rotate(0f, 180f, 0f);
         }
-        
+
         if (Input.GetButtonDown("Fire"))
         {
             SpawnBullet(PrimaryAttack);
