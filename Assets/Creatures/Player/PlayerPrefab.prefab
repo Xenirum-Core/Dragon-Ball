@@ -1153,7 +1153,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerCamera: {fileID: 3917134056801055944}
   PlayerSkin: {fileID: 7139610403931050027}
-  ProjectileSpawnPoint: {fileID: 0}
+  ProjectileSpawnPoint: {fileID: 7139610403508114072}
   PrimaryAttack: {fileID: 2866507766981829344, guid: b052e3a2d93a40140ad92d2628366c72,
     type: 3}
   UltimateAttack: {fileID: 2722144596672012485, guid: 056e387893776f742a908c8b3077d6da,
