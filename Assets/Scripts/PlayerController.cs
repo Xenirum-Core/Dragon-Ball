@@ -1,6 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
+using UnityEngine.UI;
+using System.Collections;
 
 public class PlayerController : MonoBehaviour
 {
@@ -9,54 +10,73 @@ public class PlayerController : MonoBehaviour
     public GameObject ProjectileSpawnPoint;
     public GameObject PrimaryAttack;
     public GameObject UltimateAttack;
-    
+
     public float Health = 100f;
     public float Speed = 80f;
     public float FollowCameraSmooth = 2f;
-    public int RagePoints = 0;
+    public int Rage = 0;
+    public int Score = 0;
 
     private Rigidbody2D m_Rigidbody2D;
     private Animator m_Animator;
-    
+
     private bool m_FacingRight = true;
     private float m_HorizontalAxis;
     private float m_VerticalAxis;
+    private bool IsDie = false;
 
     private Vector2 m_MovementVector;
 
-    // Spawn projectile owned by player
-    void SpawnBullet(GameObject ProjectilePrefab)
+    #region Custom functions
+    private IEnumerator SpawnBullet(GameObject ProjectilePrefab)
     {
         m_Animator.Play("player_attack");
         Instantiate(ProjectilePrefab, ProjectileSpawnPoint.transform.position, ProjectileSpawnPoint.transform.rotation);
+        yield return null;
     }
 
-    public void AddRage()
+    public IEnumerator AddRage()
     {
-        RagePoints++;
+        Rage++;
+        yield return null;
     }
 
-    void UltimateAbuse()
+    public IEnumerator AddScore(int value)
     {
-        if (RagePoints >= 10)
-        {
-            SpawnBullet(UltimateAttack);
-            RagePoints -= 10;
-        }
+        Score += value;
+        yield return null;
     }
 
-    public void SetDamage(int value)
+    private IEnumerator UltimateAbuse()
     {
-        if (Health <= 0)
+        if (Rage >= 10)
         {
-            Health = 0f;
+            StartCoroutine(SpawnBullet(UltimateAttack));
+            Rage -= 10;
         }
-        else
-        {
-            m_Animator.Play("player_hurt");
-            Health -= value;
-        }
+
+        yield return null;
     }
+
+    public IEnumerator SetDamage(int value)
+    {
+        m_Animator.Play("player_hurt");
+        Health -= value;
+        yield return null;
+    }
+    public IEnumerator Die()
+    {
+        m_Animator.Play("player_die");
+        //PlayerSkin.SetActive(false);
+
+        //GameObject.Find("GameOver").GetComponent<GameObject>().SetActive(true);
+        //GameObject.Find("HUD").GetComponent<GameObject>().SetActive(false);
+
+        IsDie = true;
+
+        yield return null;
+    }
+    #endregion
 
     void Start()
     {
@@ -66,43 +86,52 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if (Health <= 0f)
+        if (!IsDie)
         {
-            Time.timeScale = 0;
+            if (Health <= 0f && !IsDie)
+            {
+                StartCoroutine("Die");
+            }
+
+            // TMP
+            GameObject.Find("Health").GetComponentInChildren<Text>().text = Convert.ToString("HP " + Health);
+            GameObject.Find("Ultimate").GetComponentInChildren<Text>().text = Convert.ToString("Ярость " + Rage);
+            GameObject.Find("Score").GetComponentInChildren<Text>().text = Convert.ToString("Счёт " + Score);
+
+            // Get values from Input Manager
+            m_HorizontalAxis = Input.GetAxisRaw("Horizontal");
+            m_VerticalAxis = Input.GetAxisRaw("Vertical");
+
+            // Player play animation
+            if (m_MovementVector.x != 0) m_Animator.SetFloat("MovementSpeed", Mathf.Abs(m_HorizontalAxis));
+            if (m_MovementVector.y != 0) m_Animator.SetFloat("MovementSpeed", Mathf.Abs(m_VerticalAxis));
+
+            // Player skin direction by X-axis
+            if ((m_HorizontalAxis > 0 && !m_FacingRight) || (m_HorizontalAxis < 0 && m_FacingRight))
+            {
+                m_FacingRight = !m_FacingRight;
+                PlayerSkin.transform.Rotate(0f, 180f, 0f);
+            }
+
+            if (Input.GetButtonDown("Fire"))
+            {
+                StartCoroutine(SpawnBullet(PrimaryAttack));
+            }
+
+            if (Input.GetButtonDown("Ultimate"))
+            {
+                StartCoroutine("UltimateAbuse");
+            }
         }
+    }
 
-        // Get values from Input Manager
-        m_HorizontalAxis = Input.GetAxisRaw("Horizontal");
-        m_VerticalAxis = Input.GetAxisRaw("Vertical");
-
-        // Player play animation
-        if (m_MovementVector.x != 0) m_Animator.SetFloat("MovementSpeed", Mathf.Abs(m_HorizontalAxis));
-        if (m_MovementVector.y != 0) m_Animator.SetFloat("MovementSpeed", Mathf.Abs(m_VerticalAxis));
-
-        // Player skin direction by X-axis
-        if ((m_HorizontalAxis > 0 && !m_FacingRight) || (m_HorizontalAxis < 0 && m_FacingRight))
-        {
-            m_FacingRight = !m_FacingRight;
-            PlayerSkin.transform.Rotate(0f, 180f, 0f);
-        }
-
-        if (Input.GetButtonDown("Fire"))
-        {
-            SpawnBullet(PrimaryAttack);
-        }
-
-        if (Input.GetButtonDown("Ultimate"))
-        {
-            UltimateAbuse();
-        }
+    void LateUpdate()
+    {
+        PlayerCamera.transform.position = Vector2.Lerp(PlayerCamera.transform.position, PlayerSkin.transform.position, FollowCameraSmooth);
     }
 
     void FixedUpdate()
     {
-        // Camera follow player
-        PlayerCamera.transform.position = Vector2.Lerp(PlayerCamera.transform.position, PlayerSkin.transform.position, FollowCameraSmooth);
-
-        // Player movement
         m_MovementVector = new Vector2(m_HorizontalAxis, m_VerticalAxis) * Speed * Time.fixedDeltaTime;
         m_Rigidbody2D.velocity = m_MovementVector;
     }

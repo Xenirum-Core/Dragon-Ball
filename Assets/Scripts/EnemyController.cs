@@ -1,5 +1,4 @@
-﻿
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,58 +6,71 @@ public class EnemyController : MonoBehaviour
 {
     public float Health = 20f;
     public float Speed = 1f;
+    public AudioClip[] MeleeAttack; 
 
     private Animator m_Animator;
     private GameObject m_PlayerController;
     private GameObject m_Player;
+    private AudioSource m_AudioSource;
 
-    private float m_Cooldown = 1f;
+    private float m_MeleeCooldown = 1f;
     private float m_PlayerDistance;
     private bool IsDie = false;
-
     void Start()
     {
         m_Animator = GetComponent<Animator>();
         m_PlayerController = GameObject.FindGameObjectWithTag("MainCamera");
         m_Player = GameObject.FindGameObjectWithTag("Player");
+        m_AudioSource = GetComponent<AudioSource>();
     }
-
-    public void SetDamage(int value)
+    public IEnumerator SetDamage(int value)
     {
         Health -= value;
+        yield return null;
     }
-
-    void Update()
+    private IEnumerator Die()
     {
-        if (Health <= 0)
+        m_Animator.Play("enemy_creep_die");
+        m_PlayerController.SendMessage("AddRage");
+        m_PlayerController.SendMessage("AddScore", 10);
+        Destroy(gameObject, m_Animator.GetCurrentAnimatorStateInfo(0).length);
+        IsDie = true;
+
+        yield return null;
+    }
+    public IEnumerator Attack()
+    {
+        m_MeleeCooldown -= Time.deltaTime;
+        if (m_MeleeCooldown <= 0f)
         {
-            m_Animator.Play("enemy_creep_die");
-            m_PlayerController.SendMessage("AddRage");
-            Destroy(gameObject, m_Animator.GetCurrentAnimatorStateInfo(0).length);
+            m_PlayerController.SendMessage("SetDamage", Random.Range(10, 20));
+            m_Animator.Play("enemy_creep_attack");
+            m_AudioSource.clip = MeleeAttack[Random.Range(0, MeleeAttack.Length)];
+            m_AudioSource.Play();
+            m_MeleeCooldown = 1f;
         }
+
+        yield return null;
     }
-
-    void FixedUpdate()
+    private void Update()
     {
-        if (Health <= 0f)
-            return;
-
         m_PlayerDistance = Vector2.Distance(transform.position, m_Player.transform.position);
 
-        if (m_PlayerDistance > 1f)
+        if (Health <= 0f && !IsDie)
+        {
+            StartCoroutine("Die");
+        }
+    }
+    private void FixedUpdate()
+    {
+        if (m_PlayerDistance > 1.5f)
         {
             transform.position = Vector2.MoveTowards(transform.position, m_Player.transform.position, Speed * Time.fixedDeltaTime);
         }
-
-        if (m_PlayerDistance <= 1.2f)
+        else
         {
-            m_Cooldown -= Time.deltaTime;
-            if (m_Cooldown <= 0f)
-            {
-                m_PlayerController.SendMessage("SetDamage", 40f);
-                m_Animator.Play("enemy_creep_attack");
-                m_Cooldown = 1f;
-            }
+            if (m_Player == enabled)
+                StartCoroutine("Attack");
         }
     }
 }
