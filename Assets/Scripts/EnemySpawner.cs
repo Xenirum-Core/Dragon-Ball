@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    public float SpawnCooldown = 10f;
+    public float SpawnCooldown = 4f;
     public GameObject Enemy;
 
     private GameObject[] m_SpawnPoints;
@@ -23,7 +23,7 @@ public class EnemySpawner : MonoBehaviour
             {
                 Instantiate(Enemy, m_SpawnPoints[i].transform.position, m_SpawnPoints[i].transform.rotation);
             }
-            SpawnCooldown = 10f;
+            SpawnCooldown = 4f;
         }
     }
 }

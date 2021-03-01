@@ -36,6 +36,7 @@ public class ProjectileController : MonoBehaviour
         if (collider.tag == "Enemy")
         {
             collider.SendMessage("SetDamage", Damage);
+            collider.GetComponent<Animator>().Play("enemy_creep_hurt");
         }
 
         m_Collider2D.enabled = false;
@@ -46,6 +47,6 @@ public class ProjectileController : MonoBehaviour
         m_AudioSource.PlayOneShot(ImpactClip);
 
         Destroy(gameObject, 4f);
-        Destroy(m_ImpactEffectInst, m_ImpactEffectInst.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length);
+        Destroy(m_ImpactEffectInst, 0.2f);
     }
 }

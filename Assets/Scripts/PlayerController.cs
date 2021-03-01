@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class PlayerController : MonoBehaviour
     public GameObject ProjectileSpawnPoint;
     public GameObject PrimaryAttack;
     public GameObject UltimateAttack;
+    public GameObject Pause;
 
     public float Health = 100f;
     public float Speed = 80f;
@@ -24,6 +26,7 @@ public class PlayerController : MonoBehaviour
     private float m_HorizontalAxis;
     private float m_VerticalAxis;
     private bool IsDie = false;
+    private bool IsPause = false;
 
     private Vector2 m_MovementVector;
 
@@ -58,7 +61,7 @@ public class PlayerController : MonoBehaviour
         yield return null;
     }
 
-    public IEnumerator SetDamage(int value)
+    public IEnumerator SetHealth(int value)
     {
         m_Animator.Play("player_hurt");
         Health -= value;
@@ -66,25 +69,23 @@ public class PlayerController : MonoBehaviour
     }
     public IEnumerator Die()
     {
-        m_Animator.Play("player_die");
-        //PlayerSkin.SetActive(false);
-
-        //GameObject.Find("GameOver").GetComponent<GameObject>().SetActive(true);
-        //GameObject.Find("HUD").GetComponent<GameObject>().SetActive(false);
-
-        IsDie = true;
-
+        SceneManager.LoadScene("GameOver");
         yield return null;
+    }
+
+    public void SetPause(bool value)
+    {
+        IsPause = value;
     }
     #endregion
 
-    void Start()
+    private void Start()
     {
         m_Rigidbody2D = PlayerSkin.GetComponent<Rigidbody2D>();
         m_Animator = PlayerSkin.GetComponent<Animator>();
     }
 
-    void Update()
+    private void Update()
     {
         if (!IsDie)
         {
@@ -94,9 +95,9 @@ public class PlayerController : MonoBehaviour
             }
 
             // TMP
-            GameObject.Find("Health").GetComponentInChildren<Text>().text = Convert.ToString("HP " + Health);
-            GameObject.Find("Ultimate").GetComponentInChildren<Text>().text = Convert.ToString("Ярость " + Rage);
-            GameObject.Find("Score").GetComponentInChildren<Text>().text = Convert.ToString("Счёт " + Score);
+            GameObject.Find("HP").GetComponentInChildren<Text>().text = Convert.ToString("HP " + Health + "/100");
+            GameObject.Find("Rage").GetComponentInChildren<Text>().text = Convert.ToString("ЯРОСТЬ " + Rage + "/100");
+            GameObject.Find("Score").GetComponentInChildren<Text>().text = Convert.ToString("ОЧКИ " + Score);
 
             // Get values from Input Manager
             m_HorizontalAxis = Input.GetAxisRaw("Horizontal");
@@ -122,15 +123,20 @@ public class PlayerController : MonoBehaviour
             {
                 StartCoroutine("UltimateAbuse");
             }
+
+            if (Input.GetButtonDown("Cancel"))
+            {
+                SceneManager.LoadScene("Menu");
+            }
         }
     }
 
-    void LateUpdate()
+    private void LateUpdate()
     {
         PlayerCamera.transform.position = Vector2.Lerp(PlayerCamera.transform.position, PlayerSkin.transform.position, FollowCameraSmooth);
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         m_MovementVector = new Vector2(m_HorizontalAxis, m_VerticalAxis) * Speed * Time.fixedDeltaTime;
         m_Rigidbody2D.velocity = m_MovementVector;

@@ -16,6 +16,7 @@ public class EnemyController : MonoBehaviour
     private float m_MeleeCooldown = 1f;
     private float m_PlayerDistance;
     private bool IsDie = false;
+
     void Start()
     {
         m_Animator = GetComponent<Animator>();
@@ -23,27 +24,30 @@ public class EnemyController : MonoBehaviour
         m_Player = GameObject.FindGameObjectWithTag("Player");
         m_AudioSource = GetComponent<AudioSource>();
     }
+
     public IEnumerator SetDamage(int value)
     {
         Health -= value;
         yield return null;
     }
+
     private IEnumerator Die()
     {
         m_Animator.Play("enemy_creep_die");
         m_PlayerController.SendMessage("AddRage");
         m_PlayerController.SendMessage("AddScore", 10);
-        Destroy(gameObject, m_Animator.GetCurrentAnimatorStateInfo(0).length);
         IsDie = true;
 
+        Destroy(gameObject, m_Animator.GetCurrentAnimatorStateInfo(0).length);
         yield return null;
     }
+
     public IEnumerator Attack()
     {
         m_MeleeCooldown -= Time.deltaTime;
         if (m_MeleeCooldown <= 0f)
         {
-            m_PlayerController.SendMessage("SetDamage", Random.Range(10, 20));
+            m_PlayerController.SendMessage("SetHealth", Random.Range(10, 20));
             m_Animator.Play("enemy_creep_attack");
             m_AudioSource.clip = MeleeAttack[Random.Range(0, MeleeAttack.Length)];
             m_AudioSource.Play();
@@ -52,6 +56,7 @@ public class EnemyController : MonoBehaviour
 
         yield return null;
     }
+
     private void Update()
     {
         m_PlayerDistance = Vector2.Distance(transform.position, m_Player.transform.position);
@@ -61,16 +66,16 @@ public class EnemyController : MonoBehaviour
             StartCoroutine("Die");
         }
     }
+
     private void FixedUpdate()
     {
         if (m_PlayerDistance > 1.5f)
         {
             transform.position = Vector2.MoveTowards(transform.position, m_Player.transform.position, Speed * Time.fixedDeltaTime);
         }
-        else
+        else if (m_Player.activeSelf)
         {
-            if (m_Player == enabled)
-                StartCoroutine("Attack");
+            StartCoroutine("Attack");
         }
     }
 }
