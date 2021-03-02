@@ -16,6 +16,16 @@ public class ProjectileController : MonoBehaviour
     private Collider2D m_Collider2D;
     private GameObject m_ImpactEffectInst;
 
+    private void AoeDamage(Vector2 center, float radius)
+    {
+        Collider2D[] OverlappedCollider = Physics2D.OverlapCircleAll(center, radius);
+        foreach (var HitCollider in OverlappedCollider)
+        {
+            if (HitCollider.CompareTag("Enemy"))
+                HitCollider.SendMessage("SetDamage", Damage);
+        }
+    }
+
     void Start()
     {
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
@@ -35,14 +45,15 @@ public class ProjectileController : MonoBehaviour
 
         if (collider.tag == "Enemy")
         {
-            collider.SendMessage("SetDamage", Damage);
-            collider.GetComponent<Animator>().Play("enemy_creep_hurt");
+            if (Damage < 99)
+                collider.SendMessage("SetDamage", Damage);
+            else
+                AoeDamage(transform.position, 20f);
         }
 
         m_Collider2D.enabled = false;
         m_SpriteRenderer.enabled = false;
 
-        //m_AudioSource.Stop();
         m_ImpactEffectInst = Instantiate(ImpactPrefab, transform.position, transform.rotation);
         m_AudioSource.PlayOneShot(ImpactClip);
 

@@ -12,6 +12,7 @@ public class EnemyController : MonoBehaviour
     private GameObject m_PlayerController;
     private GameObject m_Player;
     private AudioSource m_AudioSource;
+    private Rigidbody2D m_Rigidbody2D;
 
     private float m_MeleeCooldown = 1f;
     private float m_PlayerDistance;
@@ -23,11 +24,13 @@ public class EnemyController : MonoBehaviour
         m_PlayerController = GameObject.FindGameObjectWithTag("MainCamera");
         m_Player = GameObject.FindGameObjectWithTag("Player");
         m_AudioSource = GetComponent<AudioSource>();
+        m_Rigidbody2D = GetComponent<Rigidbody2D>();
     }
 
     public IEnumerator SetDamage(int value)
     {
         Health -= value;
+        m_Animator.Play("enemy_creep_hurt");
         yield return null;
     }
 
@@ -71,10 +74,12 @@ public class EnemyController : MonoBehaviour
     {
         if (m_PlayerDistance > 1.5f)
         {
+            m_Animator.SetBool("IsMove", true);
             transform.position = Vector2.MoveTowards(transform.position, m_Player.transform.position, Speed * Time.fixedDeltaTime);
         }
-        else if (m_Player.activeSelf)
+        else
         {
+            m_Animator.SetBool("IsMove", false);
             StartCoroutine("Attack");
         }
     }

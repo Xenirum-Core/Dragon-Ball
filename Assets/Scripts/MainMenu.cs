@@ -46,11 +46,31 @@ public class MainMenu : MonoBehaviour
 
     public void GetBestScore()
     {
-        BestScore.GetComponent<Text>().text = "Рекорд\n" + "UNIMPL";
+        if (PlayerPrefs.HasKey("HighScore"))
+        {
+            if (PlayerPrefs.GetInt("Score") >= PlayerPrefs.GetInt("HighScore"))
+                PlayerPrefs.SetInt("HighScore", PlayerPrefs.GetInt("Score"));
+        
+            BestScore.GetComponent<Text>().text = "Рекорд\n" + PlayerPrefs.GetInt("HighScore");
+        }
+        else
+        {
+            PlayerPrefs.SetInt("HighScore", 0);
+            BestScore.GetComponent<Text>().text = "Рекорд\n" + PlayerPrefs.GetInt("HighScore");
+        }
     }
 
     public void GetScore()
     {
-        CurrentScore.GetComponent<Text>().text = "Очки\n" + "UNIMPL";
+        if (PlayerPrefs.HasKey("Score"))
+        {
+            CurrentScore.GetComponent<Text>().text = "Очки\n" + PlayerPrefs.GetInt("Score");
+        }
+        else
+        {
+            PlayerPrefs.SetInt("Score", 0);
+            CurrentScore.GetComponent<Text>().text = "Очки\n" + PlayerPrefs.GetInt("Score");
+        }
+
     }
 }

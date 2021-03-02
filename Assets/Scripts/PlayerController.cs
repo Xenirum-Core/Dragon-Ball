@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using UnityEngine.SceneManagement;
@@ -11,7 +10,6 @@ public class PlayerController : MonoBehaviour
     public GameObject ProjectileSpawnPoint;
     public GameObject PrimaryAttack;
     public GameObject UltimateAttack;
-    public GameObject Pause;
 
     public float Health = 100f;
     public float Speed = 80f;
@@ -26,7 +24,6 @@ public class PlayerController : MonoBehaviour
     private float m_HorizontalAxis;
     private float m_VerticalAxis;
     private bool IsDie = false;
-    private bool IsPause = false;
 
     private Vector2 m_MovementVector;
 
@@ -47,6 +44,7 @@ public class PlayerController : MonoBehaviour
     public IEnumerator AddScore(int value)
     {
         Score += value;
+        PlayerPrefs.SetInt("Score", Score);
         yield return null;
     }
 
@@ -67,15 +65,11 @@ public class PlayerController : MonoBehaviour
         Health -= value;
         yield return null;
     }
+
     public IEnumerator Die()
     {
         SceneManager.LoadScene("GameOver");
         yield return null;
-    }
-
-    public void SetPause(bool value)
-    {
-        IsPause = value;
     }
     #endregion
 
@@ -94,10 +88,10 @@ public class PlayerController : MonoBehaviour
                 StartCoroutine("Die");
             }
 
-            // TMP
-            GameObject.Find("HP").GetComponentInChildren<Text>().text = Convert.ToString("HP " + Health + "/100");
-            GameObject.Find("Rage").GetComponentInChildren<Text>().text = Convert.ToString("ЯРОСТЬ " + Rage + "/100");
-            GameObject.Find("Score").GetComponentInChildren<Text>().text = Convert.ToString("ОЧКИ " + Score);
+            // HUD
+            GameObject.Find("HP").GetComponentInChildren<Text>().text = "HP " + Health + "/100";
+            GameObject.Find("Rage").GetComponentInChildren<Text>().text = "ЯРОСТЬ " + Rage;
+            GameObject.Find("Score").GetComponentInChildren<Text>().text = "ОЧКИ " + Score;
 
             // Get values from Input Manager
             m_HorizontalAxis = Input.GetAxisRaw("Horizontal");
