@@ -16,8 +16,9 @@ public class ProjectileController : MonoBehaviour
 
     private void AoeDamage(Vector2 center, float radius)
     {
+
         Collider2D[] OverlappedCollider = Physics2D.OverlapCircleAll(center, radius);
-        foreach (var HitCollider in OverlappedCollider)
+        foreach (Collider2D HitCollider in OverlappedCollider)
         {
             if (HitCollider.CompareTag("Enemy"))
                 HitCollider.SendMessage("SetDamage", Damage);
@@ -44,15 +45,21 @@ public class ProjectileController : MonoBehaviour
         if (collider.tag == "Enemy")
         {
             if (Damage < 99)
+            {
+                m_ImpactEffectInst = Instantiate(ImpactPrefab, transform.position, transform.rotation);
                 collider.SendMessage("SetDamage", Damage);
+            }
             else
+            {
+                m_ImpactEffectInst = Instantiate(ImpactPrefab, new Vector2(transform.position.x, transform.position.y + 4f), transform.rotation);
+                m_ImpactEffectInst.transform.localScale *= 16f;
                 AoeDamage(transform.position, 20f);
+            }
         }
 
         m_Collider2D.enabled = false;
         m_SpriteRenderer.enabled = false;
 
-        m_ImpactEffectInst = Instantiate(ImpactPrefab, transform.position, transform.rotation);
         m_AudioSource.PlayOneShot(ImpactClip);
 
         Destroy(gameObject, 4f);

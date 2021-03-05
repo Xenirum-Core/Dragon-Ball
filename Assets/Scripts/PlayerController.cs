@@ -13,7 +13,6 @@ public class PlayerController : MonoBehaviour
 
     public float Health = 100f;
     public float Speed = 80f;
-    public float FollowCameraSmooth = 2f;
     public int Rage = 0;
     public int Score = 0;
 
@@ -88,7 +87,7 @@ public class PlayerController : MonoBehaviour
                 StartCoroutine("Die");
             }
 
-            // HUD
+            // HUD poor performance
             GameObject.Find("HP").GetComponentInChildren<Text>().text = "HP " + Health + "/100";
             GameObject.Find("Rage").GetComponentInChildren<Text>().text = "ЯРОСТЬ " + Rage;
             GameObject.Find("Score").GetComponentInChildren<Text>().text = "ОЧКИ " + Score;
@@ -127,7 +126,7 @@ public class PlayerController : MonoBehaviour
 
     private void LateUpdate()
     {
-        PlayerCamera.transform.position = Vector2.Lerp(PlayerCamera.transform.position, PlayerSkin.transform.position, FollowCameraSmooth);
+        PlayerCamera.transform.position = PlayerSkin.transform.position;
     }
 
     private void FixedUpdate()

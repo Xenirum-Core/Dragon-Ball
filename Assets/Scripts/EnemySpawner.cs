@@ -5,23 +5,19 @@ public class EnemySpawner : MonoBehaviour
     public float SpawnCooldown = 4f;
     public GameObject Enemy;
 
-    private GameObject[] m_SpawnPoints;
-
-    void Start()
-    {
-        m_SpawnPoints = GameObject.FindGameObjectsWithTag("Enemy Spawn");
-    }
+    public GameObject[] m_SpawnPoints;
+    private float m_SpawnCooldown;
 
     void Update()
     {
-        SpawnCooldown -= Time.deltaTime;
-        if (SpawnCooldown <= 0)
+        m_SpawnCooldown -= Time.deltaTime;
+        if (m_SpawnCooldown <= 0)
         {
             for (int i = 0; i < m_SpawnPoints.Length; i++)
             {
                 Instantiate(Enemy, m_SpawnPoints[i].transform.position, m_SpawnPoints[i].transform.rotation);
             }
-            SpawnCooldown = 4f;
+            m_SpawnCooldown = SpawnCooldown;
         }
     }
 }

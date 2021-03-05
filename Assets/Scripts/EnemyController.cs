@@ -11,7 +11,6 @@ public class EnemyController : MonoBehaviour
     private GameObject m_PlayerController;
     private GameObject m_Player;
     private AudioSource m_AudioSource;
-    private Rigidbody2D m_Rigidbody2D;
 
     private float m_MeleeCooldown = 1f;
     private float m_PlayerDistance;
@@ -23,7 +22,6 @@ public class EnemyController : MonoBehaviour
         m_PlayerController = GameObject.FindGameObjectWithTag("MainCamera");
         m_Player = GameObject.FindGameObjectWithTag("Player");
         m_AudioSource = GetComponent<AudioSource>();
-        m_Rigidbody2D = GetComponent<Rigidbody2D>();
     }
 
     public IEnumerator SetDamage(int value)
@@ -38,6 +36,7 @@ public class EnemyController : MonoBehaviour
         m_Animator.Play("enemy_creep_die");
         m_PlayerController.SendMessage("AddRage");
         m_PlayerController.SendMessage("AddScore", 10);
+
         IsDie = true;
 
         Destroy(gameObject, m_Animator.GetCurrentAnimatorStateInfo(0).length);
